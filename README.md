@@ -2,6 +2,23 @@
 
 > Image manipulation SPA 
 
+(1)
+Development started with a simple quick proof-of-concept prototype focused
+on core image-related routines without any additional features and UI. 
+The solution is a simple page with vanilla JS and some JQuery.
+
+Prototype's core features:
+a) upload and image resizing to fit predefined maximum size
+b) mosaic effect generation
+c) mosaic upload to Imgur
+
+http://localhost:8080/image-lab.html
+
+Next steps:
+a) test cases
+b) app UI design
+c) vue app creation
+
 ## Build Setup
 
 ``` bash
@@ -14,5 +31,3 @@ npm run dev
 # build for production with minification
 npm run build
 ```
-
-For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
