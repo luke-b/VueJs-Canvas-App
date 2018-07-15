@@ -16,7 +16,7 @@ http://localhost:8080/image-lab.html<br />
 
 (2)<br />
 Today I designed the UI usign material components from 'vue material'. The user flow
-is simple. The entry screen contains and file upload input and a gallery to pick 
+is simple. The entry screen contains an file upload input and a gallery to pick 
 images from. When the image is selected and uploaded a 'light-box' window pops up with
 the original and the processed mosaic image.<br />
 <br />
