@@ -34,7 +34,7 @@
 
         <div class="gallery-container" >
 
-         <md-button class="md-primary" @click="showDialog=true">Imgur</md-button>
+         <md-button class="md-primary">Imgur</md-button>
          <md-button class="md-primary">Redit 1</md-button>
          <md-button class="md-primary">Redit 2</md-button>
        </div>
