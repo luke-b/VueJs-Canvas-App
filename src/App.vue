@@ -107,12 +107,12 @@
 
    </md-tabs>
 
-     <span style="padding-left:20px;padding-top:15px;">{{ imageLoadMessage }}</span>
+     <div style="padding-left:20px;padding-top:15px;">{{ imageLoadMessage }}<a v-bind:href="imgurUrl">{{imgurUrl}}</a></div>
 
 
    <md-dialog-actions>
 
-     <md-button class="md-primary" @click="showDialog = false">Upload</md-button>
+     <md-button class="md-primary" @click="uploadToServer" :disabled="imageUploaded">Upload</md-button>
      <md-button class="md-primary" @click="showDialog = false">Close</md-button>
    </md-dialog-actions>
  </md-dialog>
@@ -142,12 +142,16 @@ export default {
       uploadFileName : '',
       imageLoadMessage: '',
       mosaicImage: './assets/blank.jpg',
-      originalImage: './assets/blank.jpg'
+      originalImage: './assets/blank.jpg',
+      mosaicData: '',
+      imageUploaded: true,
+      imgurUrl: ''
     }
   },
   methods:{
      loadImage: function(file) {
 
+                this.imgurUrl = '';
                 this.imageLoadMessage = "Image beeing loaded ...";
 
                 var li = this;
@@ -175,19 +179,45 @@ export default {
           if (newimageurl) {
             this.imageLoadMessage = 'Mosaic generated. Click Upload to upload mosaic to Imgur.';
 
-            console.log(newimageurl.modifiedImg);
-               console.log(newimageurl.originalImg);
+            this.imageUploaded = false;
 
-               this.originalImage = newimageurl.originalImg;
-               this.mosaicImage = newimageurl.modifiedImg;
+            this.originalImage = newimageurl.originalImg;
+            this.mosaicImage = newimageurl.modifiedImg;
+
+            this.mosaicData = newimageurl.modifiedImg;
 
             this.$forceUpdate();
 
-          //  this.showImagesPair(file, newimageurl);
           //  this.uploadToServer(file, newimageurl.modifiedImg);
         	} else {
             this.imageLoadMessage = 'Error creating mosaic';
           }
+     },
+
+     uploadToServer: function() {
+
+        this.imgurUrl = '';
+        this.imageUploaded = true;
+         this.imageLoadMessage = 'Uploading to Imgur ...';
+         var data = new FormData()
+         data.set('image', this.mosaicData.split(',')[1])
+         this.$http.post('https://api.imgur.com/3/image', data, {
+          headers: {
+                      'Authorization':'Client-ID dcb02a546436bcd'
+                    }
+         }).then((response) => {
+
+             var link = response.data.data.link;
+             this.imgurUrl = link;
+             this.imageLoadMessage = 'Image ready for sharing:';
+             this.imageUploaded = true;
+             console.log(response);
+         },(error) => {
+         this.imageUploaded = false;
+             this.imageLoadMessage = 'Unable to upload image.';
+             console.log('upload error',error);
+         });
+
      },
 
      // generates two images a) resized original b) the mosaic
