@@ -23,6 +23,9 @@ the original and the processed mosaic image.<br />
 ![Entry screen](https://raw.githubusercontent.com/luke-b/mosaic-test/master/ui-layout1.png)
 ![Mosaic preview lightbox](https://raw.githubusercontent.com/luke-b/mosaic-test/master/ui-layout2.png)
 <br />
+(3)<br />
+Today the Vue app was created. Completed features are: upload, mosaic creation and imgur upload.<br />
+<br />
 Next steps:<br />
 a) image gallery<br />
 b) tests<br />
