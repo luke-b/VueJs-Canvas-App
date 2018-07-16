@@ -113,7 +113,7 @@
    <md-dialog-actions>
 
      <md-button class="md-primary" @click="uploadToServer" :disabled="imageUploaded">Upload</md-button>
-     <md-button class="md-primary" @click="showDialog = false">Close</md-button>
+     <md-button class="md-primary" @click="showDialog = false; uploadFileName ='';">Close</md-button>
    </md-dialog-actions>
  </md-dialog>
 
@@ -178,6 +178,7 @@ export default {
           var newimageurl = this.generateImagePair(img);
           if (newimageurl) {
             this.imageLoadMessage = 'Mosaic generated. Click Upload to upload mosaic to Imgur.';
+                this.imgurUrl = '';
 
             this.imageUploaded = false;
 
