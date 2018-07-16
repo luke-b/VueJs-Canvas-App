@@ -24,9 +24,9 @@ the original and the processed mosaic image.<br />
 ![Mosaic preview lightbox](https://raw.githubusercontent.com/luke-b/mosaic-test/master/ui-layout2.png)
 <br />
 Next steps:<br />
-a) test cases<br />
-b) app UI design<br />
-c) vue app creation<br />
+a) image gallery<br />
+b) tests<br />
+
 
 (the code is leaking CLIENT-ID)
 
