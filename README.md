@@ -26,8 +26,13 @@ the original and the processed mosaic image.<br />
 (3)<br />
 Today the Vue app was created. Completed features are: upload, mosaic creation and imgur upload.<br />
 <br />
+(4)<br />
+Today the gallery has been added and some async parts have been changed to es6 promises. <br />
+![Gallery screenshot](https://github.com/luke-b/mosaic-test/blob/master/ui-shot1.png)<br/>
+<br/>
+
 Next steps:<br />
-a) image gallery<br />
+a) finish the image gallery<br />
 b) tests<br />
 
 
