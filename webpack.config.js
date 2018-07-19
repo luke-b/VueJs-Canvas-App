@@ -6,7 +6,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    assetsSubDirectory: 'assets',
     filename: 'build.js'
   },
   module: {
