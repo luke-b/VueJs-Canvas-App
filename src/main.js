@@ -5,8 +5,10 @@ import 'vue-material/dist/vue-material.min.css'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+
 Vue.use(VueAxios, axios)
 Vue.use(VueMaterial)
+
 
 new Vue({
   el: '#app',

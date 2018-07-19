@@ -32,55 +32,37 @@
           <label>OR select from a photo gallery ... </label>
         </div>
 
-        <div class="gallery-container" >
-
-         <md-button class="md-primary">Imgur</md-button>
-         <md-button class="md-primary">Redit 1</md-button>
-         <md-button class="md-primary">Redit 2</md-button>
+       <div class="gallery-container" >
+         <md-button class="md-primary" @click="openGallery(galleryConfig.imgur.url,galleryConfig.imgur.auth)">Imgur</md-button>
+         <md-button class="md-primary" @click="galleryURLtoArray(galleryConfig.reddit1.url,galleryConfig.reddit1.auth)" :disabled="true">Reddit 1</md-button>
+         <md-button class="md-primary" @click="galleryURLtoArray(galleryConfig.reddit2.url,galleryConfig.reddit2.auth)" :disabled="true">Reddit 2</md-button>
        </div>
 
-        <div class="gallery-container" >
+       <div class="gallery-container" >
 
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
+
+         <md-card class="md-layout-nowrap"
+                  md-with-hover
+                  v-for="cardIndex in 8"
+                  :key="cardIndex">
+              <div class="md-card-wrapper">
+                <template v-if="cardIndex < 8">
+                   <transition name="component-fade" mode="out-in" >
+                      <img :src="(cardImages[cardIndex-1].src?cardImages[cardIndex-1].src:'./dist/blank.jpg')"
+                           :key="(cardImages[cardIndex-1].src?cardImages[cardIndex-1].src:'./dist/blank.jpg')"
+                           :alt="'card'+cardIndex">
+                   </transition>
+                </template>
+                <template v-else>
+                  <md-card-actions>
+                    <md-button class="md-icon-button">
+                     <md-icon>navigate_next</md-icon>
+                   </md-button>
+                  </md-card-actions>
+                </template>
+              </div>
          </md-card>
 
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
-         </md-card>
-
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
-         </md-card>
-
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
-         </md-card>
-
-       </div>
-         <div class="gallery-container" >
-
-
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
-         </md-card>
-
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
-         </md-card>
-
-         <md-card class="md-layout-nowrap" md-with-hover>
-            <img src="./assets/thumb1.png" alt="thumb60x60px">
-         </md-card>
-
-         <md-card class="md-layout-nowrap" md-with-hover>
-           <md-card-actions>
-             <md-button class="md-icon-button">
-              <md-icon>navigate_next</md-icon>
-            </md-button>
-          </md-card-actions>
-
-         </md-card>
        </div>
 
     </div>
@@ -88,7 +70,7 @@
   </div>
 
 
-  <!-- lighbox -->
+  <!-- lightbox -->
 
   <md-dialog :md-active.sync="showDialog">
    <md-dialog-title>Preview ({{uploadFileName}})</md-dialog-title>
@@ -103,16 +85,17 @@
        <img :src="originalImage"  style="widht:300px;height:300px;"/>
      </md-tab>
 
-
-
    </md-tabs>
 
-     <div style="padding-left:20px;padding-top:15px;">{{ imageLoadMessage }}<a v-bind:href="imgurUrl">{{imgurUrl}}</a></div>
+     <div style="padding-left:20px;padding-top:15px;">{{ imageLoadMessage }}
+          <span v-if="imgurUrl"><md-icon>arrow_right_alt</md-icon></span>
+          <b v-if="imgurUrl">{{imgurUrl}}</b>
+     </div>
 
 
    <md-dialog-actions>
-
-     <md-button class="md-primary" @click="uploadToServer" :disabled="imageUploaded">Upload</md-button>
+     <md-button v-if="imgurUrl" class="md-raised md-primary" @click="openImgurInNewTab">Open Imgur</md-button>
+     <md-button class="md-raised md-primary" @click="uploadToServer" :disabled="imageUploaded">Share</md-button>
      <md-button class="md-primary" @click="showDialog = false; uploadFileName ='';">Close</md-button>
    </md-dialog-actions>
  </md-dialog>
@@ -124,6 +107,7 @@
 
 <script>
 
+
 var config = {
   imgWidth : 500,  // image max width in px
   imgHeight : 500,
@@ -133,8 +117,9 @@ var config = {
 
 export default {
   name: 'app',
-  created: function () {
-    console.log('Mosaic effect param: ' + config.imgWidth);
+  mounted: function () {
+      console.log("mounted() ***");
+      this.openGallery(this.galleryConfig.imgur.url,this.galleryConfig.imgur.auth);
   },
   data () {
     return {
@@ -145,10 +130,53 @@ export default {
       originalImage: './assets/blank.jpg',
       mosaicData: '',
       imageUploaded: true,
-      imgurUrl: ''
+      imgurUrl: '',
+      galleryIndex: 0,
+      thumbCache: [],
+      testThumb: "./assets/blank.jpg",
+      galleryConfig: {
+                      reddit1: {
+                          url: "https://www.reddit.com/r/EarthPorn/comments.json",
+                          auth: false
+                      },
+                      reddit2: {
+                          url: "https://www.reddit.com/r/aww/comments.json",
+                          auth: false
+                      },
+                      imgur: {
+                          url: "https://api.imgur.com/3/gallery/search/time/5/0?q=earth",
+                          auth: true
+                      },
+      },
+      cardImages: [ // demo data
+          { src: '' },
+          { src: '' },
+          { src: '' },
+          { src: '' },
+          { src: '' },
+          { src: '' },
+          { src: '' },
+          { src: '' },
+          { src: '' }
+      ]
     }
   },
   methods:{
+
+     openGallery: function(galleryURL,isAuthorized) {
+          var c = this;
+          this.galleryURLtoArray(galleryURL,isAuthorized).then((imageLinks) => {
+              console.log("openGallery / imageLinks = " + imageLinks);
+              c.galleryArrayToScreen(imageLinks,0);
+          }).catch((error) => {
+              console.log("openGallery / error = " + error);
+          });
+     },
+
+     galleryItemClicked : function(i) { // thumbnail slider click handler
+        //this.galleryIndex = i;
+     },
+
      loadImage: function(file) {
 
                 this.imgurUrl = '';
@@ -177,7 +205,7 @@ export default {
           this.imageLoadMessage = 'Image loaded.';
           var newimageurl = this.generateImagePair(img);
           if (newimageurl) {
-            this.imageLoadMessage = 'Mosaic generated. Click Upload to upload mosaic to Imgur.';
+            this.imageLoadMessage = 'Click Share to upload mosaic to Imgur.';
                 this.imgurUrl = '';
 
             this.imageUploaded = false;
@@ -191,17 +219,158 @@ export default {
 
           //  this.uploadToServer(file, newimageurl.modifiedImg);
         	} else {
-            this.imageLoadMessage = 'Error creating mosaic';
+            this.imageLoadMessage = 'Error creating mosaic. Please re-try.';
           }
+     },
+
+     // reddit 1: https://www.reddit.com/r/EarthPorn/comments.json
+     // path: data.children[].data.link_url
+     // auth: -
+
+     // reddit 2: https://www.reddit.com/r/aww/comments.json
+     // path: data.children[].data.link_url
+     // auth: -
+
+     // imgur gallery search: https://api.imgur.com/3/gallery/search/time/{{5}}/{{0}}?q=elon musk
+     // path?: data[].images[0].link
+     // auth: CLIENT_ID
+
+     // loads and transforms a json to an array with image urls
+     galleryURLtoArray: function(galleryURL,isAuthorized) {
+
+
+          return new Promise( (resolve, reject) => {
+
+           this.$http.get(galleryURL,(isAuthorized?{
+            headers: {
+                        'Authorization':'Client-ID dcb02a546436bcd'
+                      }}:{})
+           ).then((response) => {
+
+
+              //  console.log("url: " + galleryURL);
+              //  console.log(response.data);
+
+                var imageLinks = [];
+
+                if (isAuthorized) { // TODO remove - true = imgur
+
+                    for (var i = 0; i < response.data.data.length; i++) {
+
+                        if (response.data.data[i].images) {
+                          var fileName = response.data.data[i].images[0].link;
+                          if ((fileName.endsWith('gif') || fileName.endsWith('png') ||
+                              fileName.endsWith('jpg'))) {
+                          //    console.log(i + ':' + fileName);
+                              imageLinks.push(fileName);
+                          }
+                        }
+                    }
+
+                } else { // false = reddit
+
+                    for (var i = 0; i < response.data.data.children.length; i++) {
+                        var fileName = response.data.data.children[i].data.link_url;
+                        if (fileName.startsWith('https://i.imgur.com/') ||
+                            fileName.startsWith('https://i.redd.it/') &&
+                            (fileName.endsWith('gif') || fileName.endsWith('png') ||
+                             fileName.endsWith('jpg'))) {
+                          //  console.log(i + ':' + fileName);
+                            imageLinks.push(fileName);
+                        }
+                    }
+                }
+
+                resolve(imageLinks);
+
+
+           },(error) => {
+                 reject(new Error('gallery load error ',error));
+           });
+
+           });
+
+
+     },
+
+     // displays one page of the given gallery array to screen
+     galleryArrayToScreen: function(galleryArray,pageOffset) {
+
+          //imageURLtoThumbnail(imageURL)
+          var c = this;
+          for (var i = 0; i < 8; i++) {
+              var index = pageOffset + i;
+              if (index < galleryArray.length) {
+
+                  this.imageURLtoThumbnail(galleryArray[index],i).then(
+                                          function(data) {
+                      c.cardImages[data.cIndex].src = data.thumbData;
+                      console.log('%c       ', 'font-size:60px;background: url('+data.thumbData+') no-repeat;');
+                      console.log('cIndex = ' + data.cIndex);
+                  });
+              }
+          }
+     },
+
+
+
+     // loads and transforms an arbitrary image to a thumbnail images
+     // should handle caching
+     imageURLtoThumbnail: function(imageURL,cIndex,callback) {
+
+          var c = this;
+
+          return new Promise( function(resolve, reject) {
+
+          if (c.thumbCache[imageURL]) {
+            resolve(c.thumbCache[imageURL]);
+          }
+
+          var canvas = document.createElement('canvas');
+          canvas.width = 60;
+          canvas.height = 60;
+
+          var ctx = canvas.getContext("2d");
+          var img = new Image();
+          img.crossOrigin = "Anonymous";
+          img.src = imageURL;
+
+
+          img.onload = function() {
+
+            ctx.beginPath();
+            ctx.rect(0, 0, 60, 60);
+            ctx.fillStyle = "white";
+            ctx.fill();
+
+            ctx.imageSmoothingQuality = "high";
+
+            if(img.width > img.height) {
+              var r = (img.height/img.width)*60;
+              ctx.drawImage(img, 0, 30-r/2, 60, r);
+            } else {
+              var r = (img.width/img.height)*60;
+              ctx.drawImage(img, 30-r/2, 0, r, 60);
+            }
+
+            var dataURL = canvas.toDataURL();
+            c.thumbCache[imageURL] = dataURL;
+
+            resolve({thumbData:dataURL,cIndex});
+          };
+
+          });
+
      },
 
      uploadToServer: function() {
 
-        this.imgurUrl = '';
-        this.imageUploaded = true;
+         this.imgurUrl = '';
+         this.imageUploaded = true;
          this.imageLoadMessage = 'Uploading to Imgur ...';
          var data = new FormData()
-         data.set('image', this.mosaicData.split(',')[1])
+         data.set('image', this.mosaicData.split(',')[1]); //just the base64 image part
+
          this.$http.post('https://api.imgur.com/3/image', data, {
           headers: {
                       'Authorization':'Client-ID dcb02a546436bcd'
@@ -210,13 +379,14 @@ export default {
 
              var link = response.data.data.link;
              this.imgurUrl = link;
-             this.imageLoadMessage = 'Image ready for sharing:';
+             this.imageLoadMessage = 'Mosaic image ready for sharing';
              this.imageUploaded = true;
-             console.log(response);
+            // console.log(response);
          },(error) => {
-         this.imageUploaded = false;
-             this.imageLoadMessage = 'Unable to upload image.';
-             console.log('upload error',error);
+
+             this.imageUploaded = false;
+             this.imageLoadMessage = 'Unable to upload image. Please re-try.';
+          //   console.log('upload error',error);
          });
 
      },
@@ -261,7 +431,7 @@ export default {
          ypos = (config.imgHeight-config.borderThickness*2)/2 - image.height/2 + config.borderThickness;
       }
 
-      // TODO check for images smaller than mosaicRes/mosaicRes (16x16px)
+      // images smaller than mosaicRes/mosaicRes (16x16px) will cause an error
       // the following operation generates the interpolated pixels
       // without the need for getImageData and individual pixel processing
       var dbuf = document.createElement('canvas'); // double buffer as mosaic pixels data source
@@ -328,33 +498,36 @@ export default {
           var cnt = 0;
           for (var i = 0, n = pix.length; i < n; i += 4) {
 
-           targetContext.fillStyle = "rgba("+pix[i]+","+pix[i+1]+","+pix[i+2]+","+pix[i+3]+")";
+               targetContext.fillStyle = "rgba("+pix[i]+","+pix[i+1]+","+pix[i+2]+","+pix[i+3]+")";
 
-           targetContext.beginPath();
-           targetContext.arc((cnt % w)*config.mosaicRes+xoffset+config.mosaicRes/2,  // compute projected screen coords
-                       Math.floor(cnt / w)*config.mosaicRes+yoffset+config.mosaicRes/2,
-                       config.mosaicRes/2,
-                       0,
-                       2 * Math.PI);
-           targetContext.fill();
-           cnt++;
+               targetContext.beginPath();
+               targetContext.arc((cnt % w)*config.mosaicRes+xoffset+config.mosaicRes/2,  // compute projected screen coords
+                           Math.floor(cnt / w)*config.mosaicRes+yoffset+config.mosaicRes/2,
+                           config.mosaicRes/2,
+                           0,
+                           2 * Math.PI);
+               targetContext.fill();
+               cnt++;
            }
 
         } catch (e) {
-             this.imageLoadMessage = 'Image size (minimum of ' + config.mosaicRes+'x'+config.mosaicRes+'px required) or data invalid ...';
-             return false;
+               this.imageLoadMessage = 'Image size (minimum of ' + config.mosaicRes+'x'+config.mosaicRes+'px required) or data invalid ...';
+               return false;
         }
 
         return true;
      },
 
      signalFileChange: function(evt){
-                      console.log(config.imgWidth);
-
+                    //  console.log(config.imgWidth);
                       this.loadImage(evt.target.files[0]);
+                      this.showDialog = true;
+                   },
 
-                        this.showDialog = true;
-                   }
+      openImgurInNewTab: function() {
+        window.open(this.imgurUrl, '_blank');
+      }
+
   }
 }
 </script>
@@ -365,6 +538,12 @@ export default {
   .md-card {
     padding:10px;
     display: inline-block;
+
+  }
+
+  .md-card-wrapper {
+    width:60px;
+    height:60px;
   }
 
   .md-layout-item {
@@ -381,4 +560,13 @@ export default {
    .gallery-container {
      text-align:center;
    }
+
+   .component-fade-enter-active, .component-fade-leave-active {
+   transition: opacity .3s ease;
+ }
+ .component-fade-enter, .component-fade-leave-to
+ /* .component-fade-leave-active below version 2.1.8 */ {
+   opacity: 0;
+ }
+
 </style>
