@@ -1,4 +1,4 @@
-# mosaic-test
+# mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)
 
 > Image manipulation SPA 
 
