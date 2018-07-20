@@ -19,13 +19,6 @@
                   <label>Upload your photo ...</label>
                   <md-file v-model.lazy="uploadFileName"  v-on:change="signalFileChange" accept="image/*"/>
                 </md-field>
-
-                <!--
-                <md-button class="md-icon-button md-dense md-raised md-primary" @click="showDialog=true;">
-                  <md-icon>cached</md-icon>
-                </md-button>
-              -->
-
        </div>
 
        <div class="gallery-label md-layout-item md-gutter md-alignment-center-center">
