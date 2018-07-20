@@ -45,12 +45,19 @@
                   md-with-hover
                   v-for="cardIndex in 8"
                   :key="cardIndex">
-              <div class="md-card-wrapper">
+              <div class="md-card-wrapper" @click="galleryItemClicked(cardIndex-1)">
                 <template v-if="cardIndex < 8">
-                   <transition name="component-fade" mode="out-in" >
-                      <img :src="(cardImages[cardIndex-1].src?cardImages[cardIndex-1].src:'./dist/blank.jpg')"
-                           :key="(cardImages[cardIndex-1].src?cardImages[cardIndex-1].src:'./dist/blank.jpg')"
-                           :alt="'card'+cardIndex">
+                   <transition name="component-fade" mode="out-in" > <!-- smooth transition from spinner to image -->
+                      <template v-if="cardImages[cardIndex-1].src"> <!-- when image data is present -->
+                          <img :src="cardImages[cardIndex-1].src"
+                               :key="cardImages[cardIndex-1].src"
+                               :alt="'card'+cardIndex">
+                      </template>
+                      <template v-else>
+                         <div class="card-spinner"> <!-- when src is '' then a spinner is shown -->
+                           <md-progress-spinner :md-diameter="15" :md-stroke="3" md-mode="indeterminate"></md-progress-spinner>
+                         </div>
+                      </template>
                    </transition>
                 </template>
                 <template v-else>
@@ -73,7 +80,7 @@
   <!-- lightbox -->
 
   <md-dialog :md-active.sync="showDialog">
-   <md-dialog-title>Preview ({{uploadFileName}})</md-dialog-title>
+   <md-dialog-title>Preview <template v-if="uploadFileName">({{uploadFileName}})</template></md-dialog-title>
 
    <md-tabs md-dynamic-height>
 
@@ -109,17 +116,18 @@
 
 
 var config = {
-  imgWidth : 500,  // image max width in px
+  imgWidth : 500,  // mosaic image max width in px
   imgHeight : 500,
-  mosaicRes : 16, // px
-  borderThickness : 10,  // image border thickness in px
+  mosaicRes : 16, // mosaic cell size in px
+  borderThickness : 10,  // mosaic image border thickness in px
 }
 
 export default {
   name: 'app',
   mounted: function () {
       console.log("mounted() ***");
-      this.openGallery(this.galleryConfig.imgur.url,this.galleryConfig.imgur.auth);
+      this.openGallery(this.galleryConfig.imgur.url,
+                       this.galleryConfig.imgur.auth);
   },
   data () {
     return {
@@ -132,6 +140,8 @@ export default {
       imageUploaded: true,
       imgurUrl: '',
       galleryIndex: 0,
+      galleryOffset: 0,
+      galleryImagesLinks: [],
       thumbCache: [],
       testThumb: "./assets/blank.jpg",
       galleryConfig: {
@@ -148,16 +158,16 @@ export default {
                           auth: true
                       },
       },
-      cardImages: [ // demo data
-          { src: '' },
-          { src: '' },
-          { src: '' },
-          { src: '' },
-          { src: '' },
-          { src: '' },
-          { src: '' },
-          { src: '' },
-          { src: '' }
+      cardImages: [ // gallery data
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' },
+          { src: '', originalSize: '' }
       ]
     }
   },
@@ -165,16 +175,55 @@ export default {
 
      openGallery: function(galleryURL,isAuthorized) {
           var c = this;
+          this.clearGallery();
+
           this.galleryURLtoArray(galleryURL,isAuthorized).then((imageLinks) => {
               console.log("openGallery / imageLinks = " + imageLinks);
-              c.galleryArrayToScreen(imageLinks,0);
+              c.galleryImagesLinks = imageLinks;
+              c.galleryOffset = 0;
+              c.galleryArrayToScreen(  c.galleryImagesLinks ,c.galleryOffset);
           }).catch((error) => {
               console.log("openGallery / error = " + error);
           });
      },
 
-     galleryItemClicked : function(i) { // thumbnail slider click handler
-        //this.galleryIndex = i;
+     clearGallery: function() {
+         for (var i = 0; i < this.cardImages.length-1; i++) {  // show spinners
+             this.cardImages[i].src = '';
+         }
+     },
+
+     galleryItemClicked : function(clickedIndex) { // thumbnail slider click handler
+
+        if (clickedIndex == 7) {  // next page clicked
+            var imgsReady = true;
+            for (var i = 0; i < this.cardImages.length-1; i++) {
+                if (this.cardImages[i].src == '') {
+                    imgsReady = false;
+                    break;
+                }
+            }
+            if (imgsReady) {
+                this.clearGallery();
+                // handle next page
+                this.galleryOffset = this.galleryArrayToScreen(
+                                          this.galleryImagesLinks,
+                                          this.galleryOffset+7);
+
+                console.log("--> handle next page");
+            } else {
+                console.log("--> ignore next page");
+            }
+        } else {  // image clicked
+          if (this.cardImages[clickedIndex].src != '') { // is image loaded?
+              // handle image clicked
+              console.log("--> handle image clicked");
+
+              this.showDialog = true;
+              this.imageLoaded(this.cardImages[clickedIndex].originalSize);
+          }
+        }
+
      },
 
      loadImage: function(file) {
@@ -238,7 +287,6 @@ export default {
      // loads and transforms a json to an array with image urls
      galleryURLtoArray: function(galleryURL,isAuthorized) {
 
-
           return new Promise( (resolve, reject) => {
 
            this.$http.get(galleryURL,(isAuthorized?{
@@ -247,26 +295,18 @@ export default {
                       }}:{})
            ).then((response) => {
 
-
-              //  console.log("url: " + galleryURL);
-              //  console.log(response.data);
-
                 var imageLinks = [];
-
                 if (isAuthorized) { // TODO remove - true = imgur
 
                     for (var i = 0; i < response.data.data.length; i++) {
-
                         if (response.data.data[i].images) {
                           var fileName = response.data.data[i].images[0].link;
                           if ((fileName.endsWith('gif') || fileName.endsWith('png') ||
                               fileName.endsWith('jpg'))) {
-                          //    console.log(i + ':' + fileName);
                               imageLinks.push(fileName);
                           }
                         }
                     }
-
                 } else { // false = reddit
 
                     for (var i = 0; i < response.data.data.children.length; i++) {
@@ -275,22 +315,17 @@ export default {
                             fileName.startsWith('https://i.redd.it/') &&
                             (fileName.endsWith('gif') || fileName.endsWith('png') ||
                              fileName.endsWith('jpg'))) {
-                          //  console.log(i + ':' + fileName);
                             imageLinks.push(fileName);
                         }
                     }
                 }
 
                 resolve(imageLinks);
-
-
            },(error) => {
-                 reject(new Error('gallery load error ',error));
+
+                reject(new Error('gallery load error ',error));
            });
-
            });
-
-
      },
 
      // displays one page of the given gallery array to screen
@@ -298,6 +333,12 @@ export default {
 
           //imageURLtoThumbnail(imageURL)
           var c = this;
+
+          var realOffset = pageOffset;
+          if (realOffset + 7 >= galleryArray.length) {
+             realOffset = galleryArray.length - 7;
+          }
+
           for (var i = 0; i < 8; i++) {
               var index = pageOffset + i;
               if (index < galleryArray.length) {
@@ -305,26 +346,30 @@ export default {
                   this.imageURLtoThumbnail(galleryArray[index],i).then(
                                           function(data) {
                       c.cardImages[data.cIndex].src = data.thumbData;
+                      c.cardImages[data.cIndex].originalSize = data.originalSize;
+
                       console.log('%c       ', 'font-size:60px;background: url('+data.thumbData+') no-repeat;');
                       console.log('cIndex = ' + data.cIndex);
                   });
               }
           }
+
+          return realOffset;
      },
 
 
 
      // loads and transforms an arbitrary image to a thumbnail images
      // should handle caching
-     imageURLtoThumbnail: function(imageURL,cIndex,callback) {
+     imageURLtoThumbnail: function(imageURL,cIndex) {
 
           var c = this;
 
           return new Promise( function(resolve, reject) {
 
-          if (c.thumbCache[imageURL]) {
-            resolve(c.thumbCache[imageURL]);
-          }
+      //   if (c.thumbCache[imageURL]) {
+      //      resolve(c.thumbCache[imageURL]);
+      //    }
 
           var canvas = document.createElement('canvas');
           canvas.width = 60;
@@ -356,7 +401,9 @@ export default {
             var dataURL = canvas.toDataURL();
             c.thumbCache[imageURL] = dataURL;
 
-            resolve({thumbData:dataURL,cIndex});
+            resolve({thumbData:dataURL,
+                     originalSize:img,
+                     cIndex:cIndex});
           };
 
           });
@@ -562,11 +609,19 @@ export default {
    }
 
    .component-fade-enter-active, .component-fade-leave-active {
-   transition: opacity .3s ease;
- }
- .component-fade-enter, .component-fade-leave-to
- /* .component-fade-leave-active below version 2.1.8 */ {
+    transition: opacity .3s ease;
+   }
+
+   .card-spinner {
+      text-align:center;
+      position:relative;
+      top:50%;
+      transform: translateY(-50%);
+   }
+
+  .component-fade-enter, .component-fade-leave-to
+    /* .component-fade-leave-active below version 2.1.8 */ {
    opacity: 0;
- }
+   }
 
 </style>
