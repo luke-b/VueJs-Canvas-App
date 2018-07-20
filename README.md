@@ -13,6 +13,8 @@ b) mosaic effect generation<br />
 c) mosaic upload to Imgur<br />
 
 http://localhost:8080/image-lab.html<br />
+or<br />
+http://mosaic-test.herokuapp.com/image-lab.html<br />
 
 (2)<br />
 Today I designed the UI using material components from 'vue material'. The user flow
