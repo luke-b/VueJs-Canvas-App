@@ -1,4 +1,4 @@
-# mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)
+# mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)[![Heroku](http://heroku-badge.herokuapp.com/?app=mosaic-test&style=flat&svg=1)](https://mosaic-test.herokuapp.com/)
 
 > Image manipulation SPA 
 
