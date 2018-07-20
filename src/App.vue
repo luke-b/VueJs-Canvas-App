@@ -9,7 +9,7 @@
     <div class="md-layout-item  md-xsmall-hide"></div>
     <div class="md-layout-item md-medium-size-33 md-small-size-50 md-xsmall-size-100">
 
-        <div class="md-layout-item md-gutter">
+        <div class="md-layout-item md-gutter gallery-container">
           <img src="./assets/mosaic-logo.svg" alt="mosaic logo">
         </div>
 
@@ -85,11 +85,11 @@
    <md-tabs md-dynamic-height>
 
    <md-tab md-label="Mosaic" style="text-align:center;">
-     <img :src="mosaicImage"  style="widht:300px;height:300px;"/>
+     <img :src="mosaicImage"  style="widht:250px;height:250px;"/>
    </md-tab>
 
      <md-tab md-label="Original" style="text-align:center;">
-       <img :src="originalImage"  style="widht:300px;height:300px;"/>
+       <img :src="originalImage"  style="widht:250px;height:250px;"/>
      </md-tab>
 
    </md-tabs>
@@ -416,7 +416,7 @@ export default {
          this.imageUploaded = true;
          this.imageLoadMessage = 'Uploading to Imgur ...';
          var data = new FormData()
-         data.set('image', this.mosaicData.split(',')[1]); //just the base64 image part
+         data.append('image', this.mosaicData.split(',')[1]); //just the base64 image part
 
          this.$http.post('https://api.imgur.com/3/image', data, {
           headers: {
