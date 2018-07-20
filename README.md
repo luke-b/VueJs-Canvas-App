@@ -32,11 +32,21 @@ Today the Vue app was created. Completed features are: upload, mosaic creation a
 Today the gallery has been added and some async parts have been changed to es6 promises. <br />
 ![Gallery screenshot](https://github.com/luke-b/mosaic-test/blob/master/ui-shot1.png)<br/>
 <br/>
-
+(5)<br />
+Today the Gallery has been finished. Travis CI has been connected along with Heroku and<br/>
+Selenium e2e/regression testing via Ghostinspector. Github readme contains "badges" with<br/>
+live build status info (next to the title) Every time code is pushed to master<br/>
+test,build and deploy are triggered.<br/>
+The selenium test contains the whole user path:<br/>
+[click for selenium test script details](http://htmlpreview.github.io/?https://github.com/luke-b/mosaic-test/blob/master/user%20path%20with%20upload%20and%20assertions.html)<br/>
+Heroku live version:<br/>
+http://mosaic-test.herokuapp.com<br/>
+<br/>
 Next steps:<br />
-a) finish the image gallery<br />
-b) tests<br />
-
+a) tests<br />
+b) refactoring and cleanup<br/>
+c) docs<br/>
+<br/>
 
 (the code is leaking CLIENT-ID)
 
