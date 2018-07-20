@@ -5,7 +5,7 @@
 (1)<br />
 Development started with a simple quick proof-of-concept prototype focused
 on core image-related routines without any additional features and UI. 
-The solution is a simple page with vanilla JS and some JQuery.<br />
+The solution was a simple page with vanilla JS and some JQuery.<br />
 <br />
 Prototype's core features:<br />
 a) upload and image resizing to fit predefined maximum size<br />
