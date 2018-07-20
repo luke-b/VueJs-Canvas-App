@@ -340,7 +340,7 @@ export default {
           }
 
           for (var i = 0; i < 8; i++) {
-              var index = pageOffset + i;
+              var index = realOffset + i;
               if (index < galleryArray.length) {
 
                   this.imageURLtoThumbnail(galleryArray[index],i).then(
