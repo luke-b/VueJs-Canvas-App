@@ -154,7 +154,7 @@ export default {
                           auth: false
                       },
                       imgur: {
-                          url: "https://api.imgur.com/3/gallery/search/time/5/0?q=earth",
+                          url: "https://api.imgur.com/3/gallery/search/time/5/0?q=flowers",
                           auth: true
                       },
       },
