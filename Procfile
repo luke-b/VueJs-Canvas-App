@@ -1,1 +1,2 @@
-web: node build/build.js && node server.js
+release: node build/build.js
+web: node server.js
