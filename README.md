@@ -1,10 +1,10 @@
 # mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)[![Heroku](http://heroku-badge.herokuapp.com/?app=mosaic-test&style=flat&svg=1)](https://mosaic-test.herokuapp.com/)
 
-> Image manipulation SPA 
+> Image manipulation SPA
 
 (1)<br />
 Development started with a simple quick proof-of-concept prototype focused
-on core image-related routines without any additional features and UI. 
+on core image-related routines without any additional features and UI.
 The solution was a simple page with vanilla JS and some JQuery.<br />
 <br />
 Prototype's core features:<br />
@@ -18,7 +18,7 @@ http://mosaic-test.herokuapp.com/image-lab.html<br />
 
 (2)<br />
 Today I designed the UI using material components from 'vue material'. The user flow
-is simple. The entry screen contains an file upload input and a gallery to pick 
+is simple. The entry screen contains an file upload input and a gallery to pick
 images from. When the image is selected and uploaded a 'light-box' window pops up with
 the original and the processed mosaic image.<br />
 <br />
@@ -50,9 +50,6 @@ c) docs<br/>
 
 (the code is leaking CLIENT-ID)
 
-
-
-
 ## Build Setup
 
 ``` bash
@@ -64,4 +61,16 @@ npm run dev
 
 # build for production with minification
 npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
 ```
