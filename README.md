@@ -43,13 +43,15 @@ Heroku live version:<br/>
 http://mosaic-test.herokuapp.com<br/>
 <br/>
 (6)<br/>
-The app is ready for presentation. The whole solution a single Vue component. Parts like
-thumbnail generation, mosaic generation and the gallery have re-use potential and could
-be made both separate Vue components and Vue-agnostic JS modules. The source code uses some
-es6 features like Promise, Let, Const, ... thus making PhantomJS (test runner) report errors due to its
-current es6 incompatibility. It was fun yet challenging due to various configuration glitches
-in Webpack, Heroku, PhantomJS and other libs :)
-
+The app is ready for presentation. The whole solution a single Vue component. Parts like<br/>
+thumbnail generation, mosaic generation and the gallery have re-use potential and could<br/>
+be made both separate Vue components and Vue-agnostic JS modules. The source code uses some<br/>
+es6 features like Promise, Let, Const, ... thus making PhantomJS (test runner) report errors due to its<br/>
+current es6 incompatibility. It was fun yet challenging due to various configuration glitches<br/>
+in Webpack, Heroku, PhantomJS and other libs :)<br/>
+<br/>
+![User path walkthrough animation](https://github.com/luke-b/mosaic-test/blob/master/user-path.gif)<br/>
+<br/>
 (the code is leaking CLIENT-ID)
 
 ## Build Setup
