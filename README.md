@@ -1,21 +1,17 @@
-# mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)[![Heroku](http://heroku-badge.herokuapp.com/?app=mosaic-test&style=flat&svg=1)](https://mosaic-test.herokuapp.com/)
+# mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)]
 
-> Image manipulation SPA
+> Image manipulation SPA (https://mosaic-test.herokuapp.com/)
 
 (1)<br />
 Development started with a simple quick proof-of-concept prototype focused
 on core image-related routines without any additional features and UI.
 The solution was a simple page with vanilla JS and some JQuery.<br />
 <br />
-Prototype's core features:<br />
+Prototype's core features (/image-lab.html):<br />
 a) upload and image resizing to fit predefined maximum size<br />
 b) mosaic effect generation<br />
 c) mosaic upload to Imgur<br />
-
-http://localhost:8080/image-lab.html<br />
-or<br />
-http://mosaic-test.herokuapp.com/image-lab.html<br />
-
+<br/>
 (2)<br />
 Today I designed the UI using material components from 'vue material'. The user flow
 is simple. The entry screen contains an file upload input and a gallery to pick
