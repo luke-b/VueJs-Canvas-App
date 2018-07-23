@@ -16,7 +16,9 @@ module.exports = function karmaConfig (config) {
     reporters: ['spec', 'coverage'],
     files: ['./index.js'],
     preprocessors: {
-      './index.js': ['webpack', 'sourcemap']
+      './index.js': ['webpack', 'sourcemap'],
+      "src/**/*.vue": ["babel"],
+     "test/**/*.js": ["babel"]
     },
     webpack: webpackConfig,
     webpackMiddleware: {
