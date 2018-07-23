@@ -42,11 +42,13 @@ The selenium test contains the whole user path:<br/>
 Heroku live version:<br/>
 http://mosaic-test.herokuapp.com<br/>
 <br/>
-Next steps:<br />
-a) tests<br />
-b) refactoring and cleanup<br/>
-c) docs<br/>
-<br/>
+(6)<br/>
+The app is ready for presentation. The whole solution a single Vue component. Parts like
+thumbnail generation, mosaic generation and the gallery have re-use potential and could
+be made both separate Vue components and Vue-agnostic JS modules. The source code uses some
+es6 features like Promise, Let, Const, ... thus making PhantomJS (test runner) report errors due to its
+current es6 incompatibility. It was fun yet challenging due to various configuration glitches
+in Webpack, Heroku, PhantomJS and other libs :)
 
 (the code is leaking CLIENT-ID)
 
@@ -57,19 +59,7 @@ c) docs<br/>
 npm install
 
 # serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
+npm start
 
 # run all tests
 npm test
