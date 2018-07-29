@@ -1,3 +1,4 @@
+<img src="https://raw.githubusercontent.com/luke-b/mosaic-test/master/src/assets/mosaic-logo.svg?sanitize=true"/><br/>
 # mosaic-test [![Build Status](https://travis-ci.org/luke-b/mosaic-test.svg?branch=master)](https://travis-ci.org/luke-b/mosaic-test)
 
 > Image manipulation SPA (https://mosaic-test.herokuapp.com/)
