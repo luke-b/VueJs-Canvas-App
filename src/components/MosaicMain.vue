@@ -90,7 +90,7 @@ export default {
           auth: false
         },
         imgur: {
-          url: 'https://api.imgur.com/3/gallery/search/time/5/0?q=flowers',
+          url: 'https://api.imgur.com/3/gallery/search/time/5/0?q=topgear',
           auth: true
         }
       },
